@@ -140,10 +140,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CpuId.cpp" />
     <ClCompile Include="HypervisorClient.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <NASM Include="CpuId.asm" />
+    <NASM Include="CpuIdInternal.asm" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CpuId.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

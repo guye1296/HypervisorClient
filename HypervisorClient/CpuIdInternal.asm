@@ -29,8 +29,19 @@ cpuIdAvailable:
 
     ret
 
-; performs CPUID, eax is the first parameter
+; void cpuId(uint32_t eax, CpuIdResult * result);
+; see https://docs.microsoft.com/en-us/cpp/build/x64-calling-convention?view=vs-2019 for calling conventions
 cpuId:
-	mov rax, rcx
-	cpuid
+    mov rax, rcx
+    ; rdi = result
+    mov rdi, dword rdx
+    
+	cpuid 
+    ; cpuid return values are e{b,c,d}x
+    mov [rdi],       eax
+    mov [rdi + 0x4], ebx
+    mov [rdi + 0x8], ecx
+    mov [rdi + 0xC], edx
+    
+    xor rax, rax
 	ret

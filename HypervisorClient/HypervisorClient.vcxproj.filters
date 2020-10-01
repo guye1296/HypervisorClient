@@ -18,9 +18,17 @@
     <ClCompile Include="HypervisorClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CpuId.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <NASM Include="CpuId.asm">
+    <ClInclude Include="CpuId.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <NASM Include="CpuIdInternal.asm">
       <Filter>Source Files</Filter>
     </NASM>
   </ItemGroup>

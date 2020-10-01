@@ -1,8 +1,6 @@
 #include <iostream>
 
-
-extern "C" bool cpuIdAvailable(void);
-extern "C" size_t cpuId(size_t eax);
+#include "CpuId.h"
 
 
 int main()
@@ -16,11 +14,29 @@ int main()
         "               |___/ |_|\r\n\r\n\r\n";
 
     if (!cpuIdAvailable()) {
-        std::cerr << "cpuid not available :(" << std::endl;
+        std::cerr << "CPUID not available :(" << std::endl;
         exit(1);
     }
 
 
-    std::cout << "cpuid available!" << std::endl;
+    std::cout << "CPUID available!" << std::endl;
+
+    std::cout << "CPUID with eax=0: " << std::endl;
+
+    CpuIdResult result;
+    (void)cpuId(0, &result);
+
+    std::cout << "eax: 0x" << std::hex << result.eax << '\t';
+    std::cout << "ebx: 0x" << std::hex << result.ebx << '\t';
+    std::cout << "ecx: 0x" << std::hex << result.ecx << '\t';
+    std::cout << "edx: 0x" << std::hex << result.edx << '\t';
+    std::cout << std::endl;
+
+    if (!cpuIsIntel()) {
+        std::cerr << "CPU is not Intel. sad times" << std::endl;
+        exit(2);
+    }
+    std::cout << "CPU is Intel-based :)" << std::endl;
+
     std::cout << "checking for VTx support..." << std::endl;
 }
