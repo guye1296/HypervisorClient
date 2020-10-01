@@ -18,25 +18,19 @@ int main()
         exit(1);
     }
 
-
     std::cout << "CPUID available!" << std::endl;
 
-    std::cout << "CPUID with eax=0: " << std::endl;
-
-    CpuIdResult result;
-    (void)cpuId(0, &result);
-
-    std::cout << "eax: 0x" << std::hex << result.eax << '\t';
-    std::cout << "ebx: 0x" << std::hex << result.ebx << '\t';
-    std::cout << "ecx: 0x" << std::hex << result.ecx << '\t';
-    std::cout << "edx: 0x" << std::hex << result.edx << '\t';
-    std::cout << std::endl;
-
-    if (!cpuIsIntel()) {
+    if(!cpuIsIntel()) {
         std::cerr << "CPU is not Intel. sad times" << std::endl;
         exit(2);
     }
     std::cout << "CPU is Intel-based :)" << std::endl;
 
-    std::cout << "checking for VTx support..." << std::endl;
+    if (!cpuSupportsVmx()) {
+        std::cerr << "CPU does not support VMX operation. Aborting :(" << std::endl;
+        exit(3);
+    }
+
+    std::cout << "CPU supports VMX! :)" << std::endl;
+
 }

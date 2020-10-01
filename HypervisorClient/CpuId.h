@@ -19,3 +19,5 @@ extern "C" void cpuId(uint32_t eax, CpuIdResult * result);
 
 bool cpuIsIntel(void);
 
+bool cpuSupportsVmx(void);
+
