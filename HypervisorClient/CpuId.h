@@ -12,10 +12,7 @@ typedef struct _CpuIdResult {
 } CpuIdResult;
 #pragma pack(pop)
 
-
 extern "C" bool cpuIdAvailable(void);
-
-extern "C" void cpuId(uint32_t eax, CpuIdResult * result);
 
 bool cpuIsIntel(void);
 

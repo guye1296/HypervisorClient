@@ -1,5 +1,6 @@
 #include <string.h>
 #include "CpuId.h"
+#include <intrin.h>
 
 
 constexpr char CPU_VENDOR_INTEL_EBX[] = "Genu";
@@ -13,7 +14,7 @@ constexpr uint32_t CPUID_FEAT_ECX_VMX = 1 << 5;
 bool cpuIsIntel(void)
 {
 	CpuIdResult result;
-	(void)cpuId(0, &result);
+	(void)__cpuid(reinterpret_cast<int*>(&result), 0);
 
 	return
 		strcmp(CPU_VENDOR_INTEL_EBX, reinterpret_cast<const char*>(&result.ebx)) &&
@@ -24,7 +25,7 @@ bool cpuIsIntel(void)
 bool cpuSupportsVmx(void)
 {
 	CpuIdResult result;
-	(void)cpuId(CPUID_GETFEATURES, &result);
+	(void)__cpuid(reinterpret_cast<int*>(&result), CPUID_GETFEATURES);
 
 	return (result.ecx & CPUID_FEAT_ECX_VMX);
 }

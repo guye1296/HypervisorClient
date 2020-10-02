@@ -9,7 +9,6 @@ section .text
 
 
 global cpuIdAvailable
-global cpuId
 
 
 ; https://wiki.osdev.org/CPUID - checking CPUID availability
@@ -28,20 +27,3 @@ cpuIdAvailable:
     shr rax, 21                          ;return type is `bool` which is 1 byte so shift to 1 byte boundary
 
     ret
-
-; void cpuId(uint32_t eax, CpuIdResult * result);
-; see https://docs.microsoft.com/en-us/cpp/build/x64-calling-convention?view=vs-2019 for calling conventions
-cpuId:
-    mov rax, rcx
-    ; rdi = result
-    mov rdi, dword rdx
-    
-	cpuid 
-    ; cpuid return values are e{b,c,d}x
-    mov [rdi],       eax
-    mov [rdi + 0x4], ebx
-    mov [rdi + 0x8], ecx
-    mov [rdi + 0xC], edx
-    
-    xor rax, rax
-	ret
