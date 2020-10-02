@@ -2,7 +2,7 @@
 #include "CpuId.h"
 
 
-constexpr char CPU_VENDOR_INTEL_EBX[] = "GenuineIntel";
+constexpr char CPU_VENDOR_INTEL_EBX[] = "Genu";
 constexpr char CPU_VENDOR_INTEL_ECX[] = "ntel";
 constexpr char CPU_VENDOR_INTEL_EDX[] = "ineI";
 

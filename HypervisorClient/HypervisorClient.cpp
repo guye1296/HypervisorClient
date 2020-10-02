@@ -1,6 +1,20 @@
 #include <iostream>
 
+#include <windows.h>
+
 #include "CpuId.h"
+
+
+constexpr char HYPERVISOR_DEVICE_PATH[] = R"(\Device\MyHypervisor)";
+
+
+static bool cpuMeetsHypervisorRequirements()
+{
+    return 
+        cpuIdAvailable() &&
+        cpuIsIntel() &&
+        cpuSupportsVmx();
+}
 
 
 int main()
@@ -13,24 +27,32 @@ int main()
         " \\____| \\__,_| \\__, || .__/  \\___||_|     \\_/  |_||___/ \\___/ |_|\r\n"
         "               |___/ |_|\r\n\r\n\r\n";
 
-    if (!cpuIdAvailable()) {
-        std::cerr << "CPUID not available :(" << std::endl;
+
+    if (!cpuMeetsHypervisorRequirements()) {
+        std::cerr << 
+            "CPU does not meet requirements (cpuid support, intel-based and VMX support)" << 
+            std::endl;
         exit(1);
     }
 
-    std::cout << "CPUID available!" << std::endl;
 
-    if(!cpuIsIntel()) {
-        std::cerr << "CPU is not Intel. sad times" << std::endl;
-        exit(2);
+    HANDLE hvFile = CreateFileA(
+        HYPERVISOR_DEVICE_PATH,
+        GENERIC_WRITE,
+        false,
+        nullptr,
+        CREATE_NEW,
+        FILE_ATTRIBUTE_DEVICE,
+        nullptr
+    );
+
+    if (nullptr == hvFile) {
+        std::cerr << 
+            "Could not open hypervisor device path (" <<
+            HYPERVISOR_DEVICE_PATH << 
+            ") for writing" <<
+            std::endl;
+
+        exit(1);
     }
-    std::cout << "CPU is Intel-based :)" << std::endl;
-
-    if (!cpuSupportsVmx()) {
-        std::cerr << "CPU does not support VMX operation. Aborting :(" << std::endl;
-        exit(3);
-    }
-
-    std::cout << "CPU supports VMX! :)" << std::endl;
-
 }
