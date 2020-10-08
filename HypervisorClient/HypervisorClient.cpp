@@ -5,16 +5,8 @@
 #include "CpuId.h"
 
 
-constexpr char HYPERVISOR_DEVICE_PATH[] = R"(\Device\MyHypervisor)";
-
-
-static bool cpuMeetsHypervisorRequirements()
-{
-    return 
-        cpuIdAvailable() &&
-        cpuIsIntel() &&
-        cpuSupportsVmx();
-}
+// This is a DOS device path
+constexpr char HYPERVISOR_DEVICE_PATH[] = R"(\\.\\MyHypervisor)";
 
 
 int main()
@@ -27,13 +19,24 @@ int main()
         " \\____| \\__,_| \\__, || .__/  \\___||_|     \\_/  |_||___/ \\___/ |_|\r\n"
         "               |___/ |_|\r\n\r\n\r\n";
 
-
-    if (!cpuMeetsHypervisorRequirements()) {
-        std::cerr << 
-            "CPU does not meet requirements (cpuid support, intel-based and VMX support)" << 
-            std::endl;
+    if(!cpuIdAvailable()) {
+        std::cerr << "[*] cpuid not available" << std::endl;
         exit(1);
     }
+    std::cout << "[*] cpuid command available" << std::endl;
+
+    if(!cpuIsIntel()) {
+        std::cerr << "[*] CPU is not Intel based" << std::endl;
+    }
+    std::cout << "[*] CPU is Intel based" << std::endl;
+
+    if (!cpuSupportsVmx()) {
+        std::cerr << "[*] CPU does not support VMX" << std::endl;
+    }
+    std::cout << "[*] CPU supports VMX" << std::endl;
+
+
+    std::cout << "[*] CPU is Intel-based and has VTx support. Ready to Go!" << std::endl;
 
 
     HANDLE hvFile = CreateFileA(
@@ -41,8 +44,8 @@ int main()
         GENERIC_WRITE,
         false,
         nullptr,
-        CREATE_NEW,
-        FILE_ATTRIBUTE_DEVICE,
+        OPEN_EXISTING,
+        FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED,
         nullptr
     );
 

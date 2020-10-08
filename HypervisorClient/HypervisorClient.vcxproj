@@ -122,6 +122,10 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>if not exist C:\TMP\$(TargetName)\ mkdir C:\TMP\$(TargetName)\
+copy $(TargetDir) C:\TMP\$(TargetName)\</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -138,6 +142,10 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>if not exist C:\TMP\$(TargetName)\ mkdir C:\TMP\$(TargetName)\
+copy $(TargetDir) C:\TMP\$(TargetName)\</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CpuId.cpp" />
