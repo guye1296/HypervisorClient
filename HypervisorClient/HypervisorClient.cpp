@@ -39,7 +39,7 @@ int main()
     std::cout << "[*] CPU is Intel-based and has VTx support. Ready to Go!" << std::endl;
 
 
-    HANDLE hvFile = CreateFileA(
+    HANDLE hypervisorHandle = CreateFileA(
         HYPERVISOR_DEVICE_PATH,
         GENERIC_WRITE,
         false,
@@ -49,7 +49,7 @@ int main()
         nullptr
     );
 
-    if (nullptr == hvFile) {
+    if (nullptr == hypervisorHandle) {
         std::cerr << 
             "Could not open hypervisor device path (" <<
             HYPERVISOR_DEVICE_PATH << 
@@ -58,4 +58,25 @@ int main()
 
         exit(1);
     }
+
+    char outBuffer[0x1000] = { 0 };
+    char inBuffer [] = "Hello from userland";
+    unsigned long bytesReturned;
+
+    auto ioctlCallSuccessful = DeviceIoControl(
+        hypervisorHandle,
+        CTL_CODE(FILE_DEVICE_UNKNOWN, 0x902, METHOD_BUFFERED, FILE_ANY_ACCESS),
+        inBuffer,
+        strlen(inBuffer),
+        outBuffer,
+        0x1000,
+        &bytesReturned,
+        nullptr
+    );
+
+    if (!ioctlCallSuccessful) {
+        std::cerr << "[*] Error in device control: " << GetLastError() << std::endl;
+        exit(1);
+    }
+    std::cout << "[*] Got following string from driver: " << outBuffer << std::endl;
 }
